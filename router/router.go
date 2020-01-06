@@ -19,21 +19,45 @@ func InitRouter() *gin.Engine {
 	router.Use(middleware.Cors())
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	loginApi := router.Group("auth/login")
+	loginApi := router.Group("/login")
 	{
 		loginApi.POST("", controllers.Login) // 用户登录
 	}
 	//router.Use(jwtAuthenticateMiddleware)
 
-	userApi := router.Group("/user")
+	menuApi := router.Group("/menus")
 	{
-		userApi.GET("/detail/:userId", controllers.UserDetail)       //用户详情
-		userApi.GET("/list/:limit/:offset", controllers.GetUserList) //获取用户列表
-		userApi.PUT("", controllers.UserUpdate)                      //更新用户
-		userApi.POST("", controllers.UserCreate)                     //创建用户
-		userApi.DELETE("/:userId", controllers.UserDelete)           //删除用户
+		menuApi.GET("", controllers.GetMenuList)
+	}
+
+	userApi := router.Group("/users")
+	{
+		userApi.POST("", controllers.CreateUser)               //创建用户
+		userApi.GET("/detail/:userId", controllers.UserDetail) //用户详情
+		userApi.GET("", controllers.GetUserList)               //获取用户列表
+		userApi.PUT("", controllers.UpdateUser)                //更新用户
+		userApi.PUT("/state", controllers.UpdateUserState)     //更新用户状态
+		userApi.PUT("/role", controllers.UpdateUserRoleId)     //更新用户状态
+		userApi.DELETE("/:userId", controllers.DeleteUser)     //删除用户
+	}
+
+	roleApi := router.Group("/roles")
+	{
+		roleApi.POST("", controllers.CreateRole)
+		roleApi.DELETE("/:roleId", controllers.DeleteRole)
+		roleApi.POST("/rights", controllers.SetRoleRights)
+		roleApi.PUT("/rights", controllers.DeleteRoleRight)
+		roleApi.GET("/detail/:roleId", controllers.GetRoleDetail)
+		roleApi.PUT("", controllers.UpdateRole)
+		roleApi.GET("", controllers.GetRoleList)
+	}
+
+	rightApi := router.Group("/rights")
+	{
+		rightApi.GET("", controllers.GetRights)
+		rightApi.GET("/tree", controllers.GetRightsTree)
+		rightApi.DELETE("/rightId", controllers.DeleteRight)
 	}
 
 	return router
 }
-

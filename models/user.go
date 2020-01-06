@@ -1,23 +1,19 @@
 package models
 
-type Role = int
-
-const (
-	RNormal Role = iota + 1
-	RAdmin
+import (
+	"time"
 )
 
 type User struct {
-	ID       string `json:"id"`
-	UserName string `gorm:"type:varchar(255);not null;unique" json:"user_name" binding:"required"`
-	UserPwd  string `gorm:"type:varchar(255);not null" json:"user_pwd" binding:"required"`
-	Role     Role   `gorm:"not null" json:"role"`
-}
-
-type UserExecutorDatasourceInfo struct {
-	ID               int    `gorm:"primary_key" json:"id"`
-	UserID           string `gorm:"not null" json:"user_id"`
-	HubInfoID        int    `json:"hub_id"`
-	ExecutorInfoID   int    `json:"executor_id"`
-	DataSourceInfoID int    `json:"db_id"`
+	ID        uint      `json:"id"`
+	UserName  string    `gorm:"type:varchar(128); column:username; not null;unique; comment:'用户名'" json:"username" binding:"required"`
+	Password  string    `gorm:"type:char(64);not null; comment:'密码'" json:"password" binding:"required"`
+	Email     string    `gorm:"type:varchar(64); comment:'邮箱'" json:"email"`
+	Mobile    string    `gorm:"type:varchar(32); comment:'手机'" json:"mobile"`
+	State     bool      `gorm:"default:false; not null; comment:'状态'" json:"state"`
+	CreatedAt time.Time `gorm:"comment:'账号创建时间'" json:"created_at"`
+	UpdatedAt time.Time `gorm:"comment:'账号更新时间'" json:"updated_at"`
+	Introduce string    `gorm:"type:text; comment:'简介'" json:"introduce"`
+	Role      Role
+	RoleID    uint16 `gorm:"comment:'用户角色Id'" json:"role_id"`
 }
