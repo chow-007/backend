@@ -59,5 +59,15 @@ func InitRouter() *gin.Engine {
 		rightApi.DELETE("/rightId", controllers.DeleteRight)
 	}
 
+	historyAPi := router.Group("/data")
+	{
+		historyAPi.GET("/realtime", controllers.GetRealtimeData)
+		historyAPi.POST("/history", controllers.GetHistoryData)
+	}
+	videoApi := router.Group("/video")
+	{
+		videoApi.GET("", controllers.GetVideoList)
+	}
+
 	return router
 }
