@@ -12,7 +12,8 @@ var Default = &Config{
 	TokenExpireTime: getDefaultEnvInt("TokenExpireTime", 3600*1000000),
 	MysqlUrl:        getDefaultEnvString("MYSQL_URL", "root:123456@tcp(39.104.150.48:9106)/beiyou?charset=utf8mb4&parseTime=True"),
 	InfluxUrl:       getDefaultEnvString("INFLUX_URL", "influx://:@39.104.150.48:8086"),
-	InfluxDBName:    getDefaultEnvString("INFLUX_DATABASE", "monitor"),
+	//InfluxDBName:    getDefaultEnvString("INFLUX_DATABASE", "monitor"),
+	InfluxDBName:    getDefaultEnvString("INFLUX_DATABASE", "telegraf"),
 }
 
 var ServerHost map[string]int

@@ -54,22 +54,39 @@ func (h *HistoryRequest) GetSelectFields() string {
 	return strings.Join(safetyFields, ", ")
 }
 
-// 额外的解析
-//func (f *HistoryRequest) Parse() []string {
-//	// 去重
-//	return utils.SliceDuplicateRemoval(f.TagKeys)
+type MonitorFilter struct {
+	//ContainerIds  []string `json:"container_ids"` // 查询的容器
+	Field         string   `json:"field" binding:"required"`         // select查询字段
+	DashboardTime string   `json:"dashboard_time" binding:"required"` // 查询时长
+	HostName      string   `json:"host_name"`							// 主机名称
+	//Interval      string   `json:"interval"`                          // 聚合粒度
+}
+
+//func (m *MonitorFilter) GetSafetySqlOr() string {
+//	var safetyFields []string
+//	for _, f := range m.ContainerIds {
+//		safetyFields = append(safetyFields, fmt.Sprintf("container_id = '%s'", f))
+//	}
+//	return fmt.Sprintf("( %s )", strings.Join(safetyFields, " OR "))
 //}
 
-//// 额外的解析
-//func (f *HistoryRequest) Parse() (topics []string, offset, limit int64, err error) {
-//	//offset, err = strconv.ParseInt(f.Offset, 0, 0)
-//	//limit, err = strconv.ParseInt(f.Limit, 0, 0)
-//	//err = jsoniter.UnmarshalFromString(f.TagKeys, &topics)
-//	topics = f.TagKeys
-//
-//	// 去重
-//	//topics = strings.Split(f.TagKeys, ",")
-//	topics = utils.SliceDuplicateRemoval(topics)
-//
-//	return
-//}
+// 匹配聚合粒度
+func (m *MonitorFilter) GetInterval() string {
+	interval := map[string]string{
+		"30d": "6h",
+		"7d":  "1h",
+		"2d":  "30m",
+		"24h": "10m",
+		"12h": "5m",
+		"6h":  "1m",
+		"1h":  "1m",
+		"15m":  "1m",
+		"5m":  "1m",
+	}
+
+	v, ok := interval[m.DashboardTime]
+	if !ok {
+		return "1m"
+	}
+	return v
+}

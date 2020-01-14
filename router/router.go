@@ -6,10 +6,14 @@ import (
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	"net/http"
 )
 
 func InitRouter() *gin.Engine {
 	router := gin.Default()
+	router.Static("/static", "./static")
+	router.StaticFS("/more_static", http.Dir("./static"))
+
 	router.GET("/ping", func(context *gin.Context) {
 		context.JSON(200, gin.H{
 			"msg": "successed",
@@ -64,9 +68,22 @@ func InitRouter() *gin.Engine {
 		historyAPi.GET("/realtime", controllers.GetRealtimeData)
 		historyAPi.POST("/history", controllers.GetHistoryData)
 	}
-	videoApi := router.Group("/video")
+	videoApi := router.Group("/camera")
 	{
 		videoApi.GET("", controllers.GetVideoList)
+	}
+	monitorApi := router.Group("/monitor")
+	{
+		monitorApi.GET("/hosts", controllers.GetHosts)
+		monitorApi.POST("/container/cpu", controllers.GetContainerCpu)
+		monitorApi.POST("/container/mem", controllers.GetContainerMemory)
+		monitorApi.POST("/container/network", controllers.GetContainerNetwork)
+		monitorApi.POST("/container/num", controllers.GetContainerMax)
+		monitorApi.POST("/system/cpu", controllers.GetSystemCpu)
+		monitorApi.POST("/system/memory", controllers.GetSystemMemory)
+		monitorApi.POST("/system/disk", controllers.GetSystemDisk)
+		monitorApi.POST("/system/diskio", controllers.GetSystemDiskio)
+		monitorApi.POST("/system/load", controllers.GetSystemLoad)
 	}
 
 	return router

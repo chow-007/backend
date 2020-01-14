@@ -26,3 +26,11 @@ func GetSafetySqlOr(fields []string) string {
 }
 
 
+func IsContainStr(li []string, x string) bool {
+	for _, v := range li{
+		if v == x{
+			return true
+		}
+	}
+	return false
+}
