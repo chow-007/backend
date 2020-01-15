@@ -56,7 +56,7 @@ func (h *HistoryRequest) GetSelectFields() string {
 
 type MonitorFilter struct {
 	//ContainerIds  []string `json:"container_ids"` // 查询的容器
-	Field         string   `json:"field" binding:"required"`         // select查询字段
+	Field         []string   `json:"field" binding:"required"`         // select查询字段
 	DashboardTime string   `json:"dashboard_time" binding:"required"` // 查询时长
 	HostName      string   `json:"host_name"`							// 主机名称
 	//Interval      string   `json:"interval"`                          // 聚合粒度
