@@ -67,8 +67,8 @@ func GetContainerNetwork(ctx *gin.Context) {
 	}
 
 	// rx_bytes  tx_bytes 接收、发送数据包
-	baseSql := "SELECT mean(%s) AS net_%s, mean(%s) AS net_%s FROM docker_container_net where time > now() - %s group by time(%s), container_name"
-	SQL := fmt.Sprintf(baseSql, filter.Field[0], filter.Field[0], filter.Field[1], filter.Field[1], filter.DashboardTime, filter.GetInterval())
+	baseSql := "SELECT mean(%s) AS net_%s FROM docker_container_net where time > now() - %s group by time(%s), container_name"
+	SQL := fmt.Sprintf(baseSql, filter.Field[0], filter.Field[0], filter.DashboardTime, filter.GetInterval())
 	res, err := services.Service.Query(SQL)
 	if err != nil {
 		returnMsg(ctx, configs.ERROR_DATABASE, nil, err.Error())
@@ -250,34 +250,63 @@ func GetSystemDiskio(ctx *gin.Context) {
 		returnMsg(ctx, configs.ERROR_PARAMS, "", "host_name can not null")
 		return
 	}
-	if len(filter.Field) != 2 {
+	if len(filter.Field) == 0 {
 		returnMsg(ctx, configs.ERROR_PARAMS, "", "field can not empty")
 		return
 	}
 
 	// read_bytes write_bytes 系统硬盘读写速率
-	baseSql := `SELECT non_negative_derivative(max(%s), 1s)/1000000 AS %s_per_second, non_negative_derivative(max(%s), 1s)/1000000 AS %s_per_second FROM diskio where time > now() - %s AND host = '%s' group by time(%s), "name"`
-	SQL := fmt.Sprintf(baseSql, filter.Field[0], filter.Field[0], filter.Field[1], filter.Field[1], filter.DashboardTime, filter.HostName, filter.GetInterval())
+	baseSql := `SELECT non_negative_derivative(max(%s), 1s)/1000000 AS %s_per_second FROM diskio where time > now() - %s AND host = '%s' group by time(%s), "name"`
+	SQL := fmt.Sprintf(baseSql, filter.Field[0], filter.Field[0], filter.DashboardTime, filter.HostName, filter.GetInterval())
 	res, err := services.Service.Query(SQL)
 	if err != nil {
 		returnMsg(ctx, configs.ERROR_DATABASE, nil, err.Error())
 		return
 	}
 
-	//xCoordinate
-	//legend
-	//series
-	//for i, v := range res {
+	//xCoordinate := make([]interface{}, 0)
+	//legend := make([]interface{}, 0)
+	//series := make([]map[string]interface{}, 0)
+	//for ri, s := range res {
 	//	tmpLengend := make([]string, 0)
-	//	tagName := v.Tags["name"]
-	//	for m, c := range v.Columns {
+	//	tagName := s.Tags["name"]
+	//	for m, c := range s.Columns {
 	//		if m == 0 {
+	//			//xCoordinate = append(xCoordinate, s.Values[m][0])
 	//			continue
 	//		}
-	//		tmpLengend = append(tmpLengend, tagName + c)
+	//		tmpLengend = append(tmpLengend, tagName + "-" + c)
+	//		legend = append(legend, tagName + "-" + c)
+	//	}
+	//	tmp := make(map[string][]interface{})
+	//	for _, v := range s.Values {
+	//		if ri == 0{
+	//			xCoordinate = append(xCoordinate, v[0])
+	//		}
+	//		for i, c1 := range tmpLengend {
+	//			//if i == 0 {continue}
+	//			//tmp[c1] = []interface{}{v[i + 1]}
+	//			data, ok := tmp[c1]
+	//			if !ok {
+	//				tmp[c1] = []interface{}{v[i + 1]}
+	//				continue
+	//			}
+	//			data = append(data, v[i + 1])
+	//			tmp[c1] = data
+	//		}
+	//	}
+	//	for k,v := range tmp{
+	//		seriesItem := make(map[string]interface{})
+	//		seriesItem["name"] = k
+	//		seriesItem["data"] = v
+	//		series = append(series, seriesItem)
 	//	}
 	//}
-
+	//res1 := map[string]interface{}{
+	//	"legend": legend,
+	//	"xCoordinate": xCoordinate,
+	//	"series": series,
+	//}
 
 	returnMsg(ctx, 200, res, "")
 	return
