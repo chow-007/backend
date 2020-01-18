@@ -81,17 +81,18 @@ func (db *serviceProxy) GetRealtimeData() (result []models.Row, err error) {
 func (db *serviceProxy) GetHistoryData(filter serializers.HistoryRequest) (*client.Response, error) {
 	startTSN := filter.StartTime * 1000000
 	endTSN := filter.EndTime * 1000000
+	period := filter.GetPeriod()
 
 	var baseSQL string
 	var parameter []interface{}
 
 	// 查询数据
-	if filter.Period == ""{
+	if period == ""{
 		baseSQL = "SELECT %s FROM greenhouse WHERE time > %s AND time < %s"
 		parameter = []interface{}{filter.GetSelectFields(), strconv.FormatInt(startTSN, 10), strconv.FormatInt(endTSN, 10)}
 	}else {
 		baseSQL = "SELECT %s FROM greenhouse WHERE time > %s AND time < %s GROUP BY time(%s) fill(50) ORDER BY time"
-		parameter = []interface{}{filter.GetSelectFields(), strconv.FormatInt(startTSN, 10), strconv.FormatInt(endTSN, 10), filter.Period}
+		parameter = []interface{}{filter.GetSelectFields(), strconv.FormatInt(startTSN, 10), strconv.FormatInt(endTSN, 10), period}
 	}
 	SQL := fmt.Sprintf(baseSQL, parameter...)
 	fmt.Println(SQL)

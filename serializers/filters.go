@@ -2,6 +2,7 @@ package serializers
 
 import (
 	"fmt"
+	"math"
 	"strconv"
 	"strings"
 )
@@ -52,6 +53,14 @@ func (h *HistoryRequest) GetSelectFields() string {
 		safetyFields = append(safetyFields, fmt.Sprintf("%s(%s) AS %s", h.GroupFunc, f, f))
 	}
 	return strings.Join(safetyFields, ", ")
+}
+
+func (h *HistoryRequest) GetPeriod() string {
+	delaTime := h.EndTime - h.StartTime
+	if delaTime < 72000 {
+		return ""
+	}
+	return strconv.Itoa(int(math.Floor(float64((h.EndTime - h.StartTime)/7200000)))) + "s"
 }
 
 type MonitorFilter struct {
