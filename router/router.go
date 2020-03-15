@@ -86,5 +86,10 @@ func InitRouter() *gin.Engine {
 		monitorApi.POST("/system/load", controllers.GetSystemLoad)
 	}
 
+	alarmApi := router.Group("/alarm")
+	{
+		alarmApi.GET("", controllers.GetAlarmData)
+	}
+
 	return router
 }

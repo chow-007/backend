@@ -4,6 +4,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 var Default = &Config{
@@ -12,8 +13,9 @@ var Default = &Config{
 	TokenExpireTime: getDefaultEnvInt("TokenExpireTime", 3600*1000000),
 	MysqlUrl:        getDefaultEnvString("MYSQL_URL", "root:123456@tcp(39.104.150.48:9106)/beiyou?charset=utf8mb4&parseTime=True"),
 	InfluxUrl:       getDefaultEnvString("INFLUX_URL", "influx://:@39.104.150.48:8086"),
-	InfluxDBName:    getDefaultEnvString("INFLUX_DATABASE", "monitor"),
-	//InfluxDBName:    getDefaultEnvString("INFLUX_DATABASE", "telegraf"),
+	//InfluxDBName:    getDefaultEnvString("INFLUX_DATABASE", "monitor"),
+	InfluxDBName:    getDefaultEnvString("INFLUX_DATABASE", "telegraf"),
+	DataHubQueue:  getDefaultEnvString("DATA_HUB_QUEUE", "amqp://root:root@127.0.0.1:5672/beiyou"),
 }
 
 var ServerHost map[string]int
@@ -25,6 +27,7 @@ type Config struct {
 	InfluxUrl         string
 	InfluxDBName      string
 	TokenExpireTime   int
+	DataHubQueue      string
 }
 
 func getDefaultEnvString(key, defaultValue string) string {
@@ -74,3 +77,18 @@ func getDefaultEnvSlice(key string, defaultValue []string) []string {
 	}
 	return res
 }
+
+var Thresholds = make(map[string]map[string]float64)
+
+
+type Alarm struct {
+	Time time.Time `json:"time"`
+	Code string `json:"code"`
+	Co2 bool `json:"co2"`
+	O2 bool `json:"o2"`
+	Temperature bool `json:"temperature"`
+	AirHumidity bool `json:"air_humidity"`
+	GroundHumidity bool `json:"ground_humidity"`
+	Illumination bool `json:"illumination"`
+}
+var AlarmCache = make(map[string]Alarm)

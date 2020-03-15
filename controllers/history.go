@@ -23,6 +23,7 @@ func GetRealtimeData(ctx *gin.Context)  {
 		}
 		res = append(res, valueMap)
 	}
+
 	returnMsg(ctx, 200, res, "success")
 }
 

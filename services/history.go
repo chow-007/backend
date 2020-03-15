@@ -110,3 +110,7 @@ func (db *serviceProxy) GetHistoryData(filter serializers.HistoryRequest) (*clie
 	return resp, nil
 }
 
+func (db *serviceProxy) CreateRealtimeData (data serializers.RabbitMqData) {
+
+}
+

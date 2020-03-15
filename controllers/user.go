@@ -1,7 +1,3 @@
-/*
-@Time : 2019/10/22 23:49
-@Author : chenhao
-*/
 package controllers
 
 import (

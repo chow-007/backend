@@ -140,11 +140,6 @@ func GetContainerMax(ctx *gin.Context) {
 }
 
 func GetSystemCpu(ctx *gin.Context) {
-	//_, role := utils.GetUserIdAndRole(ctx)
-	//if role != models.RAdmin{
-	//	returnMsg(ctx, configs.ERROR_FORBIDDEN, nil, "非管理员账户禁止访问")
-	//	return
-	//}
 	var filter serializers.MonitorFilter
 	if err := ctx.ShouldBindJSON(&filter); err != nil {
 		returnMsg(ctx, configs.ERROR_PARAMS, "", err.Error())
@@ -172,11 +167,6 @@ func GetSystemCpu(ctx *gin.Context) {
 }
 
 func GetSystemMemory(ctx *gin.Context) {
-	//_, role := utils.GetUserIdAndRole(ctx)
-	//if role != models.RAdmin{
-	//	returnMsg(ctx, configs.ERROR_FORBIDDEN, nil, "非管理员账户禁止访问")
-	//	return
-	//}
 	var filter serializers.MonitorFilter
 	if err := ctx.ShouldBindJSON(&filter); err != nil {
 		returnMsg(ctx, configs.ERROR_PARAMS, "", err.Error())
@@ -204,11 +194,6 @@ func GetSystemMemory(ctx *gin.Context) {
 }
 
 func GetSystemDisk(ctx *gin.Context) {
-	//_, role := utils.GetUserIdAndRole(ctx)
-	//if role != models.RAdmin{
-	//	returnMsg(ctx, configs.ERROR_FORBIDDEN, nil, "非管理员账户禁止访问")
-	//	return
-	//}
 	var filter serializers.MonitorFilter
 	if err := ctx.ShouldBindJSON(&filter); err != nil {
 		returnMsg(ctx, configs.ERROR_PARAMS, "", err.Error())
@@ -236,11 +221,6 @@ func GetSystemDisk(ctx *gin.Context) {
 }
 
 func GetSystemDiskio(ctx *gin.Context) {
-	//_, role := utils.GetUserIdAndRole(ctx)
-	//if role != models.RAdmin{
-	//	returnMsg(ctx, configs.ERROR_FORBIDDEN, nil, "非管理员账户禁止访问")
-	//	return
-	//}
 	var filter serializers.MonitorFilter
 	if err := ctx.ShouldBindJSON(&filter); err != nil {
 		returnMsg(ctx, configs.ERROR_PARAMS, "", err.Error())
@@ -264,60 +244,12 @@ func GetSystemDiskio(ctx *gin.Context) {
 		return
 	}
 
-	//xCoordinate := make([]interface{}, 0)
-	//legend := make([]interface{}, 0)
-	//series := make([]map[string]interface{}, 0)
-	//for ri, s := range res {
-	//	tmpLengend := make([]string, 0)
-	//	tagName := s.Tags["name"]
-	//	for m, c := range s.Columns {
-	//		if m == 0 {
-	//			//xCoordinate = append(xCoordinate, s.Values[m][0])
-	//			continue
-	//		}
-	//		tmpLengend = append(tmpLengend, tagName + "-" + c)
-	//		legend = append(legend, tagName + "-" + c)
-	//	}
-	//	tmp := make(map[string][]interface{})
-	//	for _, v := range s.Values {
-	//		if ri == 0{
-	//			xCoordinate = append(xCoordinate, v[0])
-	//		}
-	//		for i, c1 := range tmpLengend {
-	//			//if i == 0 {continue}
-	//			//tmp[c1] = []interface{}{v[i + 1]}
-	//			data, ok := tmp[c1]
-	//			if !ok {
-	//				tmp[c1] = []interface{}{v[i + 1]}
-	//				continue
-	//			}
-	//			data = append(data, v[i + 1])
-	//			tmp[c1] = data
-	//		}
-	//	}
-	//	for k,v := range tmp{
-	//		seriesItem := make(map[string]interface{})
-	//		seriesItem["name"] = k
-	//		seriesItem["data"] = v
-	//		series = append(series, seriesItem)
-	//	}
-	//}
-	//res1 := map[string]interface{}{
-	//	"legend": legend,
-	//	"xCoordinate": xCoordinate,
-	//	"series": series,
-	//}
 
 	returnMsg(ctx, 200, res, "")
 	return
 }
 
 func GetSystemLoad(ctx *gin.Context) {
-	//_, role := utils.GetUserIdAndRole(ctx)
-	//if role != models.RAdmin{
-	//	returnMsg(ctx, configs.ERROR_FORBIDDEN, nil, "非管理员账户禁止访问")
-	//	return
-	//}
 	var filter serializers.MonitorFilter
 	if err := ctx.ShouldBindJSON(&filter); err != nil {
 		returnMsg(ctx, configs.ERROR_PARAMS, "", err.Error())
