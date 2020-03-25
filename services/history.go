@@ -91,7 +91,8 @@ func (db *serviceProxy) GetHistoryData(filter serializers.HistoryRequest) (*clie
 		baseSQL = "SELECT %s FROM greenhouse WHERE time > %s AND time < %s"
 		parameter = []interface{}{filter.GetSelectFields(), strconv.FormatInt(startTSN, 10), strconv.FormatInt(endTSN, 10)}
 	}else {
-		baseSQL = "SELECT %s FROM greenhouse WHERE time > %s AND time < %s GROUP BY time(%s) fill(50) ORDER BY time"
+		//baseSQL = "SELECT %s FROM greenhouse WHERE time > %s AND time < %s GROUP BY time(%s) fill(50) ORDER BY time"
+		baseSQL = "SELECT %s FROM greenhouse WHERE time > %s AND time < %s GROUP BY time(%s) ORDER BY time"
 		parameter = []interface{}{filter.GetSelectFields(), strconv.FormatInt(startTSN, 10), strconv.FormatInt(endTSN, 10), period}
 	}
 	SQL := fmt.Sprintf(baseSQL, parameter...)
@@ -104,9 +105,8 @@ func (db *serviceProxy) GetHistoryData(filter serializers.HistoryRequest) (*clie
 		return nil, errors.New(resp.Err)
 	}
 	if resp.Results[0].Series == nil {
-		return nil, errors.New(resp.Results[0].Err)
+		return nil, nil
 	}
-	//result = resp.Results[0].Series[0]
 	return resp, nil
 }
 
