@@ -3,6 +3,7 @@ package services
 import (
 	"backend/configs"
 	"backend/serializers"
+	"backend/utils"
 	"github.com/influxdata/influxdb/client/v2"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/streadway/amqp"
@@ -82,6 +83,17 @@ func (d *dataHubProxy) Receive()  {
 			var data serializers.RabbitMqData
 			jsoniter.Unmarshal(d.Body, &data)
 
+			configs.RealtimeData[data.Code] = map[string]interface{}{
+				"code": data.Code,
+				"co2": utils.Decimal(data.Co2),
+				"o2": utils.Decimal(data.O2),
+				"temperature": utils.Decimal(data.Temperature),
+				"air_humidity": utils.Decimal(data.AirHumidity),
+				"ground_humidity": utils.Decimal(data.GroundHumidity),
+				"illumination": utils.Decimal(data.Illumination),
+				"time": data.Time,
+			}
+
 			// 判断是否报警
 			var alarm configs.Alarm
 			if data.Co2 < configs.Thresholds["co2"]["low"] || data.Co2 > configs.Thresholds["co2"]["height"] {
@@ -113,12 +125,12 @@ func (d *dataHubProxy) Receive()  {
 			alarm.Time = data.Time
 			configs.AlarmCache[data.Code] = alarm
 
-
 			// 采集的数据存入InfluxDb库
 			bp, _ := client.NewBatchPoints(client.BatchPointsConfig{
 				Precision: "ms",
 				Database:  configs.Default.InfluxDBName,
 			})
+
 			point, _ := client.NewPoint(
 				"greenhouse",
 				map[string]string{"code": "value"},
@@ -134,6 +146,7 @@ func (d *dataHubProxy) Receive()  {
 			bp.AddPoint(point)
 
 			Service.influx.Write(bp)
+
 		}
 	}()
 

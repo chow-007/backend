@@ -4,12 +4,14 @@ import (
 	"backend/configs"
 	"backend/models"
 	"backend/serializers"
+	"backend/utils"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/influxdata/influxdb/client/v2"
 	"github.com/jinzhu/gorm"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/streadway/amqp"
+	"math/rand"
 	"net/url"
 	"time"
 )
@@ -75,22 +77,28 @@ func initDataHub() {
 
 	go func() {
 		for{
-			tmpData := serializers.RabbitMqData{
-				Time: time.Now(),
-				Code: "1# 温室",
-				Co2:            0.04,
-				O2:             20.9,
-				Temperature:    15,
-				AirHumidity:    70,
-				GroundHumidity: 60,
-				Illumination:   59,
-			}
+			_t := time.Now()
+			for i:=1; i<=30; i++ {
 
-			tmp, err := jsoniter.Marshal(tmpData)
-			if err != nil {
-				panic(err)
+				rand.Seed(int64(i))
+
+				tmpData := serializers.RabbitMqData{
+					Time: _t,
+					Code: fmt.Sprintf("%d# 温室", i),
+					Co2:            0.04 + utils.Decimal(rand.Float64()),
+					O2:             20.9 + utils.Decimal(rand.Float64()),
+					Temperature:    15 + utils.Decimal(rand.Float64()),
+					AirHumidity:    70 + utils.Decimal(rand.Float64()),
+					GroundHumidity: 60 + utils.Decimal(rand.Float64()),
+					Illumination:   59 + utils.Decimal(rand.Float64()),
+				}
+
+				tmp, err := jsoniter.Marshal(tmpData)
+				if err != nil {
+					panic(err)
+				}
+				Service.dataHub.Publish(tmp)
 			}
-			Service.dataHub.Publish(tmp)
 			time.Sleep(time.Second * 10)
 		}
 	}()
@@ -106,7 +114,7 @@ func initDataHub() {
 		configs.Thresholds[v.Name] = item
 	}
 
-	// 接手rabbitQq消息
+	// 接收rabbitQq消息
 	Service.dataHub.Receive()
 
 }

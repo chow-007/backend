@@ -11,11 +11,11 @@ var Default = &Config{
 	Debug:           getDefaultEnvBool("DEBUG", true),
 	SecretKey:       getDefaultEnvString("SECRET_KEY", "test"),
 	TokenExpireTime: getDefaultEnvInt("TokenExpireTime", 3600*1000000),
-	MysqlUrl:        getDefaultEnvString("MYSQL_URL", "root:root@tcp(localhost:3306)/beiyou?charset=utf8mb4&parseTime=True"),
-	InfluxUrl:       getDefaultEnvString("INFLUX_URL", "influx://root:root@39.104.150.48:8086"),
+	MysqlUrl:        getDefaultEnvString("MYSQL_URL", "root:123456@tcp(10.0.0.131:3306)/beiyou?charset=utf8mb4&parseTime=True"),
+	InfluxUrl:       getDefaultEnvString("INFLUX_URL", "influx://root:root@10.0.0.131:8086"),
 	//InfluxDBName:    getDefaultEnvString("INFLUX_DATABASE", "monitor"),
 	InfluxDBName:    getDefaultEnvString("INFLUX_DATABASE", "monitor"),
-	DataHubQueue:  getDefaultEnvString("DATA_HUB_QUEUE", "amqp://root:root@127.0.0.1:5672/beiyou"),
+	DataHubQueue:  getDefaultEnvString("DATA_HUB_QUEUE", "amqp://root:root@10.0.0.131:5672/beiyou"),
 }
 
 var ServerHost map[string]int
@@ -92,3 +92,5 @@ type Alarm struct {
 	Illumination bool `json:"illumination"`
 }
 var AlarmCache = make(map[string]Alarm)
+
+var RealtimeData = make(map[string]map[string]interface{})
