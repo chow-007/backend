@@ -8,7 +8,7 @@ import (
 type serviceProxy struct {
 	mysql  *gorm.DB
 	influx client.Client
-	dataHub *dataHubProxy
+	//dataHub *dataHubProxy
 }
 
 var Service *serviceProxy
@@ -22,6 +22,6 @@ func init() {
 func (db *serviceProxy) Close() {
 	db.mysql.Close()
 	db.influx.Close()
-	db.dataHub.Close()
+	//db.dataHub.Close()
 }
 

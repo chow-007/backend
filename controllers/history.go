@@ -37,6 +37,20 @@ func GetRealtimeData(ctx *gin.Context)  {
 	returnMsg(ctx, 200, res, "success")
 }
 
+func GetRealtimeTemperature(ctx *gin.Context)  {
+	res := make([]interface{}, 0)
+	n := 0
+	for _, v := range configs.RealtimeTemperature {
+		n += 1
+		if n > 20 {
+			break
+		}
+		res = append(res, v)
+	}
+
+	returnMsg(ctx, 200, res, "success")
+}
+
 func GetHistoryData(ctx *gin.Context) {
 	var filter serializers.HistoryRequest
 	if err := ctx.ShouldBindJSON(&filter); err != nil {

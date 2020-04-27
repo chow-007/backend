@@ -94,3 +94,4 @@ type Alarm struct {
 var AlarmCache = make(map[string]Alarm)
 
 var RealtimeData = make(map[string]map[string]interface{})
+var RealtimeTemperature = make(map[string]interface{})

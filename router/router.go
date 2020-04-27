@@ -66,6 +66,7 @@ func InitRouter() *gin.Engine {
 	historyAPi := router.Group("/data")
 	{
 		historyAPi.GET("/realtime", controllers.GetRealtimeData)
+		historyAPi.GET("/realtimeTemperature", controllers.GetRealtimeTemperature)
 		historyAPi.POST("/history", controllers.GetHistoryData)
 	}
 	videoApi := router.Group("/camera")
